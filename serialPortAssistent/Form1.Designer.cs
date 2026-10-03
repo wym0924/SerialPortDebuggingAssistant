@@ -220,7 +220,7 @@
             groupBox2.Size = new Size(281, 345);
             groupBox2.TabIndex = 5;
             groupBox2.TabStop = false;
-            groupBox2.Text = "数据接收";
+            groupBox2.Text = "接收区";
             // 
             // txtReceiveData
             // 
@@ -238,7 +238,7 @@
             groupBox3.Size = new Size(281, 225);
             groupBox3.TabIndex = 6;
             groupBox3.TabStop = false;
-            groupBox3.Text = "数据发送";
+            groupBox3.Text = "发送区";
             // 
             // sendData
             // 
