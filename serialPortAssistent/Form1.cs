@@ -119,7 +119,7 @@ namespace serialPortAssistent
                 receiveString = byteToHexstr(receiveBuffer);
             }
 
-            if (this.huanhang.Checked)
+            if (this.cbDtr.Checked)
             {
                 receiveString += "\r\n"; // 添加换行符
             }
