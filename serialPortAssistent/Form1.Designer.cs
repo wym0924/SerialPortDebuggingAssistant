@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            cbRts = new CheckBox();
             btnOpenAndClosePort = new Button();
             cbDtr = new CheckBox();
             stop = new ComboBox();
@@ -45,29 +46,28 @@
             txtReceiveData = new TextBox();
             groupBox3 = new GroupBox();
             sendData = new TextBox();
-            cbRts = new CheckBox();
             groupBox4 = new GroupBox();
-            txtReceiveFilePath = new TextBox();
+            btnZt = new Button();
+            btnSaveReceive = new Button();
+            btnSelectPath = new Button();
+            btnClearReceive = new Button();
             cbAutoClearReceive = new CheckBox();
             cb16HexReceive = new CheckBox();
-            btnClearReceive = new Button();
-            btnSelectPath = new Button();
-            btnSaveReceive = new Button();
-            btnZt = new Button();
+            txtReceiveFilePath = new TextBox();
             groupBox5 = new GroupBox();
+            textBox1 = new TextBox();
+            label9 = new Label();
+            label6 = new Label();
             btnClearSend = new Button();
             btnSendFile = new Button();
             btnOpenFile = new Button();
             btnSend = new Button();
             cbAutoSend = new CheckBox();
-            checkBox2 = new CheckBox();
+            cb16HexSend = new CheckBox();
             txtSendFilePath = new TextBox();
-            label6 = new Label();
             txtAutoSendZq = new TextBox();
             label7 = new Label();
             label8 = new Label();
-            textBox1 = new TextBox();
-            label9 = new Label();
             label10 = new Label();
             txtSendCount = new TextBox();
             txtReceiveCount = new TextBox();
@@ -102,6 +102,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "串口设置";
             // 
+            // cbRts
+            // 
+            cbRts.AutoSize = true;
+            cbRts.Location = new Point(17, 180);
+            cbRts.Name = "cbRts";
+            cbRts.Size = new Size(49, 21);
+            cbRts.TabIndex = 5;
+            cbRts.Text = "RTS";
+            cbRts.UseVisualStyleBackColor = true;
+            // 
             // btnOpenAndClosePort
             // 
             btnOpenAndClosePort.Location = new Point(109, 186);
@@ -125,7 +135,7 @@
             // stop
             // 
             stop.FormattingEnabled = true;
-            stop.Items.AddRange(new object[] { "1", "2" });
+            stop.Items.AddRange(new object[] { "1", "1.5", "2" });
             stop.Location = new Point(93, 149);
             stop.Name = "stop";
             stop.Size = new Size(121, 25);
@@ -197,7 +207,6 @@
             // serialPortNumber
             // 
             serialPortNumber.FormattingEnabled = true;
-            serialPortNumber.Items.AddRange(new object[] { "com1", "com2", "com3", "com4", "com5", "com6" });
             serialPortNumber.Location = new Point(93, 25);
             serialPortNumber.Name = "serialPortNumber";
             serialPortNumber.Size = new Size(121, 25);
@@ -247,16 +256,8 @@
             sendData.Name = "sendData";
             sendData.Size = new Size(266, 191);
             sendData.TabIndex = 1;
-            // 
-            // cbRts
-            // 
-            cbRts.AutoSize = true;
-            cbRts.Location = new Point(17, 180);
-            cbRts.Name = "cbRts";
-            cbRts.Size = new Size(49, 21);
-            cbRts.TabIndex = 5;
-            cbRts.Text = "RTS";
-            cbRts.UseVisualStyleBackColor = true;
+            sendData.TextChanged += sendData_TextChanged;
+            sendData.Leave += sendData_Leave;
             // 
             // groupBox4
             // 
@@ -274,52 +275,15 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "接收配置";
             // 
-            // txtReceiveFilePath
+            // btnZt
             // 
-            txtReceiveFilePath.Location = new Point(6, 109);
-            txtReceiveFilePath.Multiline = true;
-            txtReceiveFilePath.Name = "txtReceiveFilePath";
-            txtReceiveFilePath.Size = new Size(236, 26);
-            txtReceiveFilePath.TabIndex = 0;
-            // 
-            // cbAutoClearReceive
-            // 
-            cbAutoClearReceive.AutoSize = true;
-            cbAutoClearReceive.Location = new Point(25, 24);
-            cbAutoClearReceive.Name = "cbAutoClearReceive";
-            cbAutoClearReceive.Size = new Size(75, 21);
-            cbAutoClearReceive.TabIndex = 7;
-            cbAutoClearReceive.Text = "自动清空";
-            cbAutoClearReceive.UseVisualStyleBackColor = true;
-            // 
-            // cb16HexReceive
-            // 
-            cb16HexReceive.AutoSize = true;
-            cb16HexReceive.Location = new Point(25, 51);
-            cb16HexReceive.Name = "cb16HexReceive";
-            cb16HexReceive.Size = new Size(75, 21);
-            cb16HexReceive.TabIndex = 6;
-            cb16HexReceive.Text = "十六进制";
-            cb16HexReceive.UseVisualStyleBackColor = true;
-            // 
-            // btnClearReceive
-            // 
-            btnClearReceive.ImageAlign = ContentAlignment.BottomCenter;
-            btnClearReceive.Location = new Point(126, 22);
-            btnClearReceive.Name = "btnClearReceive";
-            btnClearReceive.Size = new Size(87, 23);
-            btnClearReceive.TabIndex = 6;
-            btnClearReceive.Text = "手动清空";
-            btnClearReceive.UseVisualStyleBackColor = true;
-            // 
-            // btnSelectPath
-            // 
-            btnSelectPath.Location = new Point(16, 80);
-            btnSelectPath.Name = "btnSelectPath";
-            btnSelectPath.Size = new Size(87, 23);
-            btnSelectPath.TabIndex = 8;
-            btnSelectPath.Text = "选择路径";
-            btnSelectPath.UseVisualStyleBackColor = true;
+            btnZt.Location = new Point(126, 51);
+            btnZt.Name = "btnZt";
+            btnZt.Size = new Size(87, 23);
+            btnZt.TabIndex = 10;
+            btnZt.Text = "暂停";
+            btnZt.UseVisualStyleBackColor = true;
+            btnZt.Click += btnZt_Click;
             // 
             // btnSaveReceive
             // 
@@ -330,14 +294,55 @@
             btnSaveReceive.Text = "保存数据";
             btnSaveReceive.UseVisualStyleBackColor = true;
             // 
-            // btnZt
+            // btnSelectPath
             // 
-            btnZt.Location = new Point(126, 51);
-            btnZt.Name = "btnZt";
-            btnZt.Size = new Size(87, 23);
-            btnZt.TabIndex = 10;
-            btnZt.Text = "暂停";
-            btnZt.UseVisualStyleBackColor = true;
+            btnSelectPath.Location = new Point(16, 80);
+            btnSelectPath.Name = "btnSelectPath";
+            btnSelectPath.Size = new Size(87, 23);
+            btnSelectPath.TabIndex = 8;
+            btnSelectPath.Text = "选择路径";
+            btnSelectPath.UseVisualStyleBackColor = true;
+            // 
+            // btnClearReceive
+            // 
+            btnClearReceive.ImageAlign = ContentAlignment.BottomCenter;
+            btnClearReceive.Location = new Point(126, 22);
+            btnClearReceive.Name = "btnClearReceive";
+            btnClearReceive.Size = new Size(87, 23);
+            btnClearReceive.TabIndex = 6;
+            btnClearReceive.Text = "手动清空";
+            btnClearReceive.UseVisualStyleBackColor = true;
+            btnClearReceive.Click += btnClearReceive_Click;
+            // 
+            // cbAutoClearReceive
+            // 
+            cbAutoClearReceive.AutoSize = true;
+            cbAutoClearReceive.Location = new Point(25, 24);
+            cbAutoClearReceive.Name = "cbAutoClearReceive";
+            cbAutoClearReceive.Size = new Size(75, 21);
+            cbAutoClearReceive.TabIndex = 7;
+            cbAutoClearReceive.Text = "自动清空";
+            cbAutoClearReceive.UseVisualStyleBackColor = true;
+            cbAutoClearReceive.CheckedChanged += cbAutoClearReceive_CheckedChanged;
+            // 
+            // cb16HexReceive
+            // 
+            cb16HexReceive.AutoSize = true;
+            cb16HexReceive.Location = new Point(25, 51);
+            cb16HexReceive.Name = "cb16HexReceive";
+            cb16HexReceive.Size = new Size(75, 21);
+            cb16HexReceive.TabIndex = 6;
+            cb16HexReceive.Text = "十六进制";
+            cb16HexReceive.UseVisualStyleBackColor = true;
+            cb16HexReceive.CheckedChanged += cb16HexReceive_CheckedChanged;
+            // 
+            // txtReceiveFilePath
+            // 
+            txtReceiveFilePath.Location = new Point(6, 109);
+            txtReceiveFilePath.Multiline = true;
+            txtReceiveFilePath.Name = "txtReceiveFilePath";
+            txtReceiveFilePath.Size = new Size(236, 26);
+            txtReceiveFilePath.TabIndex = 0;
             // 
             // groupBox5
             // 
@@ -349,7 +354,7 @@
             groupBox5.Controls.Add(btnOpenFile);
             groupBox5.Controls.Add(btnSend);
             groupBox5.Controls.Add(cbAutoSend);
-            groupBox5.Controls.Add(checkBox2);
+            groupBox5.Controls.Add(cb16HexSend);
             groupBox5.Controls.Add(txtSendFilePath);
             groupBox5.Location = new Point(12, 408);
             groupBox5.Name = "groupBox5";
@@ -357,6 +362,33 @@
             groupBox5.TabIndex = 11;
             groupBox5.TabStop = false;
             groupBox5.Text = "发送配置";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(127, 283);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(116, 20);
+            textBox1.TabIndex = 13;
+            textBox1.Text = "1000";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(5, -123);
+            label9.Name = "label9";
+            label9.Size = new Size(105, 17);
+            label9.TabIndex = 12;
+            label9.Text = "自动发送周期(ms)";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(16, 150);
+            label6.Name = "label6";
+            label6.Size = new Size(105, 17);
+            label6.TabIndex = 6;
+            label6.Text = "自动发送周期(ms)";
             // 
             // btnClearSend
             // 
@@ -366,6 +398,7 @@
             btnClearSend.TabIndex = 10;
             btnClearSend.Text = "清空发送";
             btnClearSend.UseVisualStyleBackColor = true;
+            btnClearSend.Click += btnClearSend_Click;
             // 
             // btnSendFile
             // 
@@ -394,6 +427,7 @@
             btnSend.TabIndex = 6;
             btnSend.Text = "手动发送";
             btnSend.UseVisualStyleBackColor = true;
+            btnSend.Click += btnSend_Click;
             // 
             // cbAutoSend
             // 
@@ -405,15 +439,16 @@
             cbAutoSend.Text = "自动发送";
             cbAutoSend.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // cb16HexSend
             // 
-            checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(25, 51);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(75, 21);
-            checkBox2.TabIndex = 6;
-            checkBox2.Text = "十六进制";
-            checkBox2.UseVisualStyleBackColor = true;
+            cb16HexSend.AutoSize = true;
+            cb16HexSend.Location = new Point(25, 51);
+            cb16HexSend.Name = "cb16HexSend";
+            cb16HexSend.Size = new Size(75, 21);
+            cb16HexSend.TabIndex = 6;
+            cb16HexSend.Text = "十六进制";
+            cb16HexSend.UseVisualStyleBackColor = true;
+            cb16HexSend.CheckedChanged += cb16HexSend_CheckedChanged;
             // 
             // txtSendFilePath
             // 
@@ -422,15 +457,6 @@
             txtSendFilePath.Name = "txtSendFilePath";
             txtSendFilePath.Size = new Size(236, 26);
             txtSendFilePath.TabIndex = 0;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(16, 150);
-            label6.Name = "label6";
-            label6.Size = new Size(105, 17);
-            label6.TabIndex = 6;
-            label6.Text = "自动发送周期(ms)";
             // 
             // txtAutoSendZq
             // 
@@ -459,24 +485,6 @@
             label8.TabIndex = 11;
             label8.Text = "初始化正常";
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(127, 283);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(116, 20);
-            textBox1.TabIndex = 13;
-            textBox1.Text = "1000";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(5, -123);
-            label9.Name = "label9";
-            label9.Size = new Size(105, 17);
-            label9.TabIndex = 12;
-            label9.Text = "自动发送周期(ms)";
-            // 
             // label10
             // 
             label10.AutoSize = true;
@@ -493,7 +501,7 @@
             txtSendCount.Name = "txtSendCount";
             txtSendCount.Size = new Size(63, 20);
             txtSendCount.TabIndex = 15;
-            txtSendCount.Text = "1000";
+            txtSendCount.Text = "0";
             // 
             // txtReceiveCount
             // 
@@ -502,7 +510,7 @@
             txtReceiveCount.Name = "txtReceiveCount";
             txtReceiveCount.Size = new Size(63, 20);
             txtReceiveCount.TabIndex = 17;
-            txtReceiveCount.Text = "1000";
+            txtReceiveCount.Text = "0";
             // 
             // label11
             // 
@@ -521,6 +529,7 @@
             btnClearCount.TabIndex = 14;
             btnClearCount.Text = "清空计数";
             btnClearCount.UseVisualStyleBackColor = true;
+            btnClearCount.Click += btnClearCount_Click;
             // 
             // Form1
             // 
@@ -591,7 +600,7 @@
         private Button btnOpenFile;
         private Button btnSend;
         private CheckBox cbAutoSend;
-        private CheckBox checkBox2;
+        private CheckBox cb16HexSend;
         private TextBox txtSendFilePath;
         private TextBox textBox1;
         private Label label9;
