@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             groupBox1 = new GroupBox();
             cbRts = new CheckBox();
             btnOpenAndClosePort = new Button();
@@ -67,12 +68,13 @@
             txtSendFilePath = new TextBox();
             txtAutoSendZq = new TextBox();
             label7 = new Label();
-            label8 = new Label();
+            state = new Label();
             label10 = new Label();
             txtSendCount = new TextBox();
             txtReceiveCount = new TextBox();
             label11 = new Label();
             btnClearCount = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -111,6 +113,7 @@
             cbRts.TabIndex = 5;
             cbRts.Text = "RTS";
             cbRts.UseVisualStyleBackColor = true;
+            cbRts.CheckedChanged += cbRts_CheckedChanged;
             // 
             // btnOpenAndClosePort
             // 
@@ -131,6 +134,7 @@
             cbDtr.TabIndex = 1;
             cbDtr.Text = "DTR";
             cbDtr.UseVisualStyleBackColor = true;
+            cbDtr.CheckedChanged += cbDtr_CheckedChanged;
             // 
             // stop
             // 
@@ -293,6 +297,7 @@
             btnSaveReceive.TabIndex = 9;
             btnSaveReceive.Text = "保存数据";
             btnSaveReceive.UseVisualStyleBackColor = true;
+            btnSaveReceive.Click += btnSaveReceive_Click;
             // 
             // btnSelectPath
             // 
@@ -302,6 +307,7 @@
             btnSelectPath.TabIndex = 8;
             btnSelectPath.Text = "选择路径";
             btnSelectPath.UseVisualStyleBackColor = true;
+            btnSelectPath.Click += btnSelectPath_Click;
             // 
             // btnClearReceive
             // 
@@ -408,6 +414,7 @@
             btnSendFile.TabIndex = 9;
             btnSendFile.Text = "发送文件";
             btnSendFile.UseVisualStyleBackColor = true;
+            btnSendFile.Click += btnSendFile_Click;
             // 
             // btnOpenFile
             // 
@@ -417,6 +424,7 @@
             btnOpenFile.TabIndex = 8;
             btnOpenFile.Text = "打开文件";
             btnOpenFile.UseVisualStyleBackColor = true;
+            btnOpenFile.Click += btnOpenFile_Click;
             // 
             // btnSend
             // 
@@ -438,6 +446,7 @@
             cbAutoSend.TabIndex = 7;
             cbAutoSend.Text = "自动发送";
             cbAutoSend.UseVisualStyleBackColor = true;
+            cbAutoSend.CheckedChanged += cbAutoSend_CheckedChanged;
             // 
             // cb16HexSend
             // 
@@ -476,14 +485,14 @@
             label7.TabIndex = 11;
             label7.Text = "状态：";
             // 
-            // label8
+            // state
             // 
-            label8.AutoSize = true;
-            label8.Location = new Point(79, 603);
-            label8.Name = "label8";
-            label8.Size = new Size(68, 17);
-            label8.TabIndex = 11;
-            label8.Text = "初始化正常";
+            state.AutoSize = true;
+            state.Location = new Point(57, 603);
+            state.Name = "state";
+            state.Size = new Size(68, 17);
+            state.TabIndex = 11;
+            state.Text = "初始化正常";
             // 
             // label10
             // 
@@ -531,6 +540,10 @@
             btnClearCount.UseVisualStyleBackColor = true;
             btnClearCount.Click += btnClearCount_Click;
             // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -541,7 +554,7 @@
             Controls.Add(label11);
             Controls.Add(txtSendCount);
             Controls.Add(label10);
-            Controls.Add(label8);
+            Controls.Add(state);
             Controls.Add(label7);
             Controls.Add(txtAutoSendZq);
             Controls.Add(groupBox5);
@@ -607,11 +620,12 @@
         private Label label6;
         private TextBox txtAutoSendZq;
         private Label label7;
-        private Label label8;
+        private Label state;
         private Label label10;
         private TextBox txtSendCount;
         private TextBox txtReceiveCount;
         private Label label11;
         private Button btnClearCount;
+        private System.Windows.Forms.Timer timer1;
     }
 }

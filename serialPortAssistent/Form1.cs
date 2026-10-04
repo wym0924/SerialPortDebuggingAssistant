@@ -19,8 +19,9 @@ namespace serialPortAssistent
 
         private List<byte> sendBuffer = new List<byte>(); // 发送数据缓冲区
         private int receiveCount = 0; // 接收数据计数
-
         private int sendCount = 0; // 发送数据计数
+
+        private string strRead;  // 文件读取变量
         // 创建串口类对象
         SerialPort serialPort = new SerialPort();
         #endregion
@@ -334,5 +335,185 @@ namespace serialPortAssistent
             this.txtReceiveCount.Text = "0";
         }
 
+        private void cbAutoSend_CheckedChanged(object sender, EventArgs e)
+        {
+            // 串口未打开,但是自动发送被选中
+            if (serialPort.IsOpen == false && cbAutoSend.CheckState == CheckState.Checked)
+            {
+                // 将自动发送复选框取消选中
+                cbAutoSend.CheckState = CheckState.Unchecked;
+                // 判断定时器
+                if (timer1 != null)
+                {
+                    timer1.Enabled = false;
+                    timer1.Stop();
+                }
+                MessageBox.Show("发送失败，请先打开串口！");
+                return;
+
+            }
+
+            if (serialPort.IsOpen == true && cbAutoSend.CheckState == CheckState.Checked)
+            {
+                // 自动发送周期不再改变
+                txtAutoSendZq.Enabled = false;
+                // 手动发送停止
+                btnSend.Enabled = false;
+                // 自动发送周期时间
+                int zq = Convert.ToInt32(this.txtAutoSendZq.Text);
+                // 限制范围
+                if (zq < 10 || zq > 60 * 1000)
+                {
+                    zq = 1000;
+                    this.txtAutoSendZq.Text = "1000";
+                    MessageBox.Show("自动发送周期范围为10~60000毫秒，已将自动发送周期设置为1000毫秒！", "警告");
+                }
+                // 设置定时器周期
+                timer1.Interval = zq;
+                timer1.Start();
+            }
+            else
+            {
+                txtAutoSendZq.Enabled = true;
+                btnSend.Enabled = true;
+                if (timer1 != null)
+                {
+                    timer1.Enabled = false;
+                    timer1.Stop();
+                }
+            }
+        }
+
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (serialPort.IsOpen && this.sendData.Text != "")
+            {
+                send();// 发送数据
+                this.state.Text = this.cbAutoSend.Text;
+            }
+            else
+            {
+                this.state.Text = "请先输入发送数据！";
+            }
+
+        }
+
+        private void cbRts_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbRts.Checked)
+            {
+                serialPort.RtsEnable = true;
+            }
+            else
+            {
+                serialPort.RtsEnable = false;
+            }
+        }
+
+        private void cbDtr_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbDtr.Checked)
+            {
+                serialPort.DtrEnable = true;
+            }
+            else
+            {
+                serialPort.DtrEnable = false;
+            }
+        }
+
+        /// <summary>
+        /// 选择接收文件保存路径
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSelectPath_Click(object sender, EventArgs e)
+        {
+            // 文件选择对话框组件
+            FolderBrowserDialog fbDialog = new FolderBrowserDialog();
+            if (fbDialog.ShowDialog() == DialogResult.OK)
+            {
+                // 将选择的路径显示
+                this.txtReceiveFilePath.Text = fbDialog.SelectedPath;
+            }
+
+        }
+
+        /// <summary>
+        /// 保存接收数据到文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSaveReceive_Click(object sender, EventArgs e)
+        {
+            if (this.txtReceiveFilePath.Text == "") return;
+
+            string filePath = this.txtReceiveFilePath.Text + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
+            StreamWriter sw = new StreamWriter(filePath);
+            sw.Write(this.txtReceiveData.Text);
+            sw.Flush();
+            sw.Close();
+            MessageBox.Show("保存接受文件成功！文件路径：" + filePath);
+
+        }
+
+        /// <summary>
+        /// 打开文件选择对话框，选择要发送的文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "请选择要发送的文件";
+            openFileDialog.Filter = "文本文件(*.txt)|*.txt";  // 过滤文件类型
+            openFileDialog.RestoreDirectory = true;  // 存储上次选择的文件路径
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog.FileName;   // 提取文件名
+                txtSendFilePath.Text = fileName;   // 显示文件名
+                StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding(936));
+                strRead = sr.ReadToEnd();
+                sendData.Text = strRead;  // 显示到 发送数据框
+                sr.Close();
+            }
+        }
+
+        private void btnSendFile_Click(object sender, EventArgs e)
+        {
+            if(strRead == "")
+            {
+                MessageBox.Show("请先选择文件");
+                return;
+            }
+
+            try
+            {
+                //需要控制文件长度
+                byte[] data = Encoding.GetEncoding(936).GetBytes(strRead);
+                sendCount += data.Length;
+                txtSendCount.Text = sendCount.ToString();
+                // 进行 分页防止 超过4096
+                int pageNum = data.Length / 4096; // 页数
+                int remaind = data.Length % 4096; // 剩余的
+                for(int i=0; i < pageNum; i++)
+                {
+                    serialPort.Write(data,(i*4096), 4096);
+                    Thread.Sleep(10);  // 暂停10毫秒，防止发送过快
+                }
+
+                if(remaind > 0)
+                {
+                    serialPort.Write(data, (pageNum * 4096), remaind);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("发送数据失败"+ ex.ToString(), "错误");
+            }
+
+        }
     }
 }
